@@ -102,7 +102,10 @@ class GrpcConan(ConanFile):
         # abseil requires:
         # transitive_headers=True because grpc headers include abseil headers
         # transitive_libs=True because generated code (grpc_cpp_plugin) require symbols from abseil
-        if Version(self.version) > "1.65.0":
+        if Version(self.version) >= "1.74.1":
+            self.requires("protobuf/[>=6.31.1 <7.0.0]", transitive_headers=True)
+            self.requires("abseil/[>=20240116.1 <=20250814.1]", transitive_headers=True, transitive_libs=True)
+        elif Version(self.version) > "1.65.0":
             self.requires("protobuf/5.27.0", transitive_headers=True)
             self.requires("abseil/[>=20240116.1 <=20250127.0]", transitive_headers=True, transitive_libs=True)
         elif Version(self.version) >= "1.62.0" and Version(self.version) <= "1.65.0":
@@ -113,7 +116,7 @@ class GrpcConan(ConanFile):
             self.requires("protobuf/3.21.12", transitive_headers=True)
         self.requires("c-ares/[>=1.19.1 <2]")
         self.requires("openssl/[>=1.1 <4]")
-        self.requires("re2/20230301")
+        self.requires("re2/[>=20230301 <=20250812]")
         self.requires("zlib/[>=1.2.11 <2]")
         if self.options.get_safe("with_libsystemd"):
             if Version(self.version) >= "1.67.0":
